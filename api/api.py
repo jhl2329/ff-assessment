@@ -21,8 +21,12 @@ def analyze_file():
 	skip_words = request.args.get('skip', default=0, type=int)
 	core = request.args.get('core', default=0, type=int)
 
+	# FileStorage object
 	file = request.files['file']
-	analyze.parse_file(file)
+	# Decode incoming file with utf-8
+	decoded_file = file.read().decode('utf-8', 'ignore')
+	# Throw to service code to do analysis
+	analyze.parse_file(decoded_file)
 	return 'Processing'
 
 app.run()
