@@ -1,6 +1,7 @@
-from service import analyze
+from service import analyze, processor
+from datetime import datetime
 import flask
-from flask import request, jsonify, render_template
+from flask import request, render_template
 
 app = flask.Flask(__name__, template_folder='template')
 app.config["DEBUG"] = True
@@ -8,7 +9,7 @@ app.config["DEBUG"] = True
 # Health check
 @app.route('/', methods=['GET'])
 def home():
-	return 'Hello!'
+	return render_template('base.html')
 
 # Basic upload 
 @app.route('/upload')
@@ -25,8 +26,13 @@ def analyze_file():
 	file = request.files['file']
 	# Decode incoming file with utf-8
 	decoded_file = file.read().decode('utf-8', 'ignore')
-	# Throw to service code to do analysis
-	analyze.parse_file(decoded_file)
-	return 'Processing'
+	# Throw to service code to do analysis, returns df of results
+	service_response = processor.process(decoded_file)
+	return render_template('results.html', 
+		tables=[service_response.to_html()] if not service_response.empty else [],
+		timestamp=datetime.now(),
+		filename=file.filename
+	)
+
 
 app.run()

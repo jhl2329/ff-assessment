@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Results for {{ filename }} on {{ timestamp }}</h1>
+{% if tables|length %}
+	{% for table in tables %}
+	    {{ table|safe }}
+	{% endfor %}
+{% else %}
+	No valid words
+{% endif %}
+</body>
+</html>

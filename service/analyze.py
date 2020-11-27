@@ -1,6 +1,9 @@
 PUNCTUATION = """!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~'"""
 
-# Parse an incoming file byte stream for frequency, and returns a map of the frequency count of each word.
+'''
+Parse an incoming file byte stream for frequency, and returns a list of tuples of frequency count
+of each word.
+'''
 def parse_file(file):
 	counts = {}
 	for word in file.split():
@@ -32,7 +35,7 @@ def get_top(frequency_count):
 	# Sort by count of each item
 	sorted_list = sorted(frequency_count.items(), key=lambda item: item[1], reverse=True)
 	# Get first 25 results
-	print(sorted_list[:25])
+	# print(sorted_list[:25])
 	return sorted_list[:25]
 
 def health_check():
