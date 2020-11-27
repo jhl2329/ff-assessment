@@ -6,6 +6,8 @@
 </head>
 <body>
 <h1>Results for {{ filename }} on {{ timestamp }}</h1>
+<h2>Excluded stopwords {{ skip_words }} </h2>
+<h2>Used extracted stem {{ core_words }} </h2>
 {% if tables|length %}
 	{% for table in tables %}
 	    {{ table|safe }}

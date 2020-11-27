@@ -2,7 +2,11 @@
    <body>
       <form action = "http://localhost:5000/api/v1/analyze" method = "POST" 
          enctype = "multipart/form-data">
-         <input type = "file" name = "file" />
+         <input type="file" name="file"/><br>
+         <input type="checkbox" id="stop-box" name="stop"/>
+         <label for="stop-box">Exclude stop words</label><br>
+         <input type="checkbox" id="stem-box" name="stem"/>
+         <label for="stem-box">Extract word stems</label><br>
          <input type = "submit"/>
       </form>   
    </body>
