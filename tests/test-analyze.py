@@ -40,5 +40,30 @@ class TestPuncuation(unittest.TestCase):
 	def test_word_punctuation(self):
 		some_word = 'DVQ,'
 		self.assertEqual(analyze.process_punctuation(some_word), 'DVQ')
+
+class TestProcessCoreWords(unittest.TestCase):
+	def test_core_word(self):
+		word = 'ALZ'
+		self.assertEqual('A', analyze.process_suffix(word))
+
+	def test_core_word_casing(self):
+		word = 'alz'
+		self.assertEqual('a', analyze.process_suffix(word))
+
+	def test_core_word_replace(self):
+		word = 'ABCPZL'
+		# rule collision but assume suffix replacement with longer suffix takes precedent
+		result = analyze.process_suffix(word)
+		self.assertNotEqual('ABCA', result)
+		self.assertEqual('ABCAZ', result)
+
+	def test_core_word_replace_casing(self):
+		word = 'abcPzL'
+		self.assertEqual('abcAZ', analyze.process_suffix(word))
+
+	def test_core_word_replace_none(self):
+		word = 'Jae'
+		self.assertEqual('Jae', analyze.process_suffix(word))
+
 if __name__ == '__main__':
 	unittest.main()

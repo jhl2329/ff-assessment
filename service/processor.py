@@ -15,7 +15,10 @@ class Processor:
 
 		# take file that's already decoded and in bytes, and do analysis, returning pandas df of results
 	def process(self, file, skip_words, core_words):
-		analysis = analyze.parse_file(file) if not skip_words else analyze.parse_file(file, self.words_to_skip) # list of tuples
+		if skip_words:
+			analysis = analyze.parse_file(file, words_to_skip=self.words_to_skip, core_words=core_words)
+		else:
+			analysis = analyze.parse_file(file, core_words=core_words)
 		if (len(analysis) == 0): # analysis turned up empty for words
 			return pd.DataFrame()
 		df = pd.DataFrame(analysis)
