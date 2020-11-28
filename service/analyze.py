@@ -4,7 +4,7 @@ PUNCTUATION = """!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~'"""
 Parse an incoming file byte stream for frequency, and returns a list of tuples of frequency count
 of each word.
 '''
-def parse_file(file, words_to_skip):
+def parse_file(file, words_to_skip=set()):
 	counts = {}
 	for word in file.split():
 		word = process_punctuation(word)
