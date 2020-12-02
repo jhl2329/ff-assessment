@@ -32,7 +32,6 @@ def analyze_file():
 	# Throw to service code to do analysis, returns df of results
 	service_processor.process(request_id, decoded_file, skip_words, core_words, file.filename, True)
 	json = service_processor.get(request_id)
-	# df = pd.read_json(service_response['data'])
 	if json is not None:
 		df = pd.read_json(json['data'])
 		return render('results.html', df, request_id, json['skip_words'], json['core_words'], json['file_name'])
@@ -49,7 +48,6 @@ def get():
 @app.route('/api/v1/all')
 def get_all():
 	keys = service_processor.get_all()
-	print('type here as well: ', type(keys))
 	return render_template('get_all.html', keys=keys)
 
 def render(template_name, tables, request_id, skip_words, core_words, file_name):
