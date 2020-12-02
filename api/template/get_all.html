@@ -1,0 +1,8 @@
+<html>
+   <body>
+	{% for key in keys %}
+		<a href="http://localhost:5000/api/v1?id={{key|safe}}">{{key|safe}}</a>
+		<br/>
+	{% endfor %}
+   </body>
+</html>

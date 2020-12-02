@@ -1,9 +1,12 @@
 from service import analyze
+from db import db
 import pandas as pd
 from os import path
 from datetime import datetime
 import pathlib
 import json
+import os
+import redis
 
 class Processor:
 
@@ -20,27 +23,45 @@ class Processor:
 		write_dir_loc = path.join(script_dir, 'resources', 'output', datetime.now().date().isoformat())
 		write_dir = pathlib.Path(write_dir_loc).mkdir(parents=True, exist_ok=True)
 		self.write_directory = write_dir_loc
+		self.cache = db.Db()
 
 
-	# take file that's already decoded and in bytes, and do analysis, returning pandas df of results
-	def process(self, request_id, file, skip_words, core_words, persist=False):
+	# take file that's already decoded and in bytes, and do analysis, returning json of results
+	def process(self, request_id, file, skip_words, core_words, file_name, persist=False):
 		df = pd.DataFrame()
 		if skip_words:
 			analysis = self.analyzer.parse_file(file, words_to_skip=self.words_to_skip, core_words=core_words)
 		else:
 			analysis = self.analyzer.parse_file(file, core_words=core_words)
 		if (len(analysis) == 0): # analysis turned up empty for words
+			json_info = self.create_json_view(df, skip_words, core_words, file_name)
 			if persist:
-				self.write_result(request_id, df, skip_words, core_words)
-			return df
+				self.write_result(request_id, json_info)
+			return json_info
 		df = pd.DataFrame(analysis)
+		json_info = self.create_json_view(df, skip_words, core_words, file_name)
 		if persist:
-			self.write_result(request_id, df, skip_words, core_words)
-		return df
+			self.write_result(request_id, json_info)
 
-	# Write dataframe to local file for latter persistence, acting as a primitive storage
-	def write_result(self, request_id, df, skip_words, core_words):
-		json_info = json.dumps({'dataframe': df.to_json(), 'skip_words': skip_words, 'core_words': core_words})
-		file_path = path.join(self.write_directory, request_id)
-		with open(file_path, 'w') as write_file:
-			write_file.write(json_info)
+	def get(self, request_id):
+		json_info = self.cache.get(request_id)
+		if json_info is not None:
+			return json.loads(json_info)
+		return None
+
+	def get_all(self):
+		keys = self.cache.get_all_keys()
+		return keys
+
+	# Write json to redis cache for persistence
+	def write_result(self, request_id, json):
+		self.cache.set(request_id, json)
+
+	def create_json_view(self, df, skip_words, core_words, file_name):
+		return json.dumps({
+			'data': df.to_json(), 
+			'skip_words': skip_words, 
+			'core_words': core_words,
+			'timestamp': datetime.now().date().isoformat(),
+			'file_name': file_name
+		})
