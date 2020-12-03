@@ -4,6 +4,7 @@ import uuid
 import flask
 from flask import request, render_template
 import pandas as pd
+import json as j
 
 app = flask.Flask(__name__, template_folder='template')
 app.config["DEBUG"] = True
@@ -30,8 +31,9 @@ def analyze_file():
 	# Decode incoming file with utf-8
 	decoded_file = file.read().decode('utf-8', 'ignore')
 	# Throw to service code to do analysis, returns df of results
-	service_processor.process(request_id, decoded_file, skip_words, core_words, file.filename, True)
-	json = service_processor.get(request_id)
+	json_result = service_processor.process(request_id, decoded_file, skip_words, core_words, file.filename, True)
+	# json = service_processor.get(request_id)
+	json = j.loads(json_result)
 	if json is not None:
 		df = pd.read_json(json['data'])
 		return render('results.html', df, request_id, json['skip_words'], json['core_words'], json['file_name'])

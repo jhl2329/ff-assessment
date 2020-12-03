@@ -42,6 +42,7 @@ class Processor:
 		json_info = self.create_json_view(df, skip_words, core_words, file_name)
 		if persist:
 			self.write_result(request_id, json_info)
+		return json_info
 
 	def get(self, request_id):
 		json_info = self.cache.get(request_id)
