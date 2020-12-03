@@ -12,10 +12,25 @@ With docker-daemon running in the background
 docker-compose up
 ```
 
-In order to just view only a single analysis itself, you can kick off the flask app by utilizing the entry point for the python script, 
+App needs to be run through docker-compose in order to see previous analysis results. 
+
+In order to just view only a single analysis itself, you can kick off the flask app by utilizing the entry point for the python script, assuming Python 3
 ```bash
+pip install -r requirements.txt
+
 python main.py
 ```
+
+Then once you get the app to start running (default port 5000), navigate to `localhost:5000/upload` and upload a file from your local file system. 
+
+## Technologies
+Flask to render a basic interface and API endpoints
+
+Docker to containerize application
+
+Redis for basic, naive persistence
+
+Pandas to render results in easy to read interface. 
 
 ## Usage
 
