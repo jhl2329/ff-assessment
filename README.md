@@ -35,7 +35,7 @@ If both the python container and the redis container is up, you can view the con
 3. `docker exec -it ${process_id} /bin/bash`
 4. Then simply type in `redis-cli` to have an interactive version of the redis instance.
 
-## Assumptions and Though Process for Assessment
+## Assumptions and Thought Process for Assessment
 In addition to the requirements set forth in the exercise document, I made some additional assumptions regarding the logic of some of the analysis. They are as follows:
 
 1. A valid word is considered as such if and only if it contains characters [A-Z] and [a-z]. As such, if there is such a word like 'ABC?D', it would be considered an invalid word since the '?' interrupts the main word. Other such examples of invalid characters are numbers or accented characters.  
