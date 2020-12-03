@@ -5,8 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<a href="http://localhost:5000/api/v1?id={{request_id|safe}}">{{request_id}}</a>
 <h1>Results for {{ file_name }}</h1>
+<h1>Date {{ timestamp }} </h1>
 <h2>Excluded stopwords {{ skip_words }} </h2>
 <h2>Used extracted stem {{ core_words }} </h2>
 {% if tables|length %}
